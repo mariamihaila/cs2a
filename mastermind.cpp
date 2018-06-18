@@ -80,6 +80,7 @@ void Mastermind::play()
   cout << "Computer: I have a 4 letter word in mind. Can you guess it?" << endl;
   const int namesSize = sizeof(names) / sizeof(names[0]);
   const int myRandom = rand() % namesSize;
+  cout << myRandom << endl;
   picked = names[myRandom];
   
   string guess;
@@ -88,10 +89,16 @@ void Mastermind::play()
   {
     tries++;
     guess = read_guess();
-    if (check(guess) == "++++") {
+    const string response = check(guess);
+    if (response == "****")
+    {
       cout << "Computer: You got it! " << tries << " tries." << endl;
       break;
     }
+    if (response == "") 
+      cout << "Sorry, you got nothing." << endl;
+    else 
+      cout << response << endl;
   }
 }
 
@@ -104,8 +111,9 @@ string Mastermind::read_guess() const
 
 int main()
 {
+  srand(time(0));
+  
   Mastermind mastermind;
 
- 
-    
+  mastermind.play();
 }
