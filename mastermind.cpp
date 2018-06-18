@@ -128,7 +128,7 @@ void Mastermind::play()
 {
   cout << "Computer: I have a 4 letter name in mind. Can you guess it?" << endl;
   int tries = 0;
-
+  pick_name();
   while (true)
   {
     tries++;
