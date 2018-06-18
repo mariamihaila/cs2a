@@ -7,14 +7,13 @@ class Mastermind
 {
 public:
   Mastermind() {}
-  void play();
+  void play() const;
   
 private:
   string read_guess() const;
-  string check(string guess) const;
+  string check(string guess, string picked) const;
   
   static const string names[];
-  string picked;
 };
 
 const string Mastermind::names[] =
@@ -49,7 +48,7 @@ const string Mastermind::names[] =
     "WALT", "WILL", "WOLF"
   };
 
-string Mastermind::check(string guess) const
+string Mastermind::check(string guess, string picked) const
 {
   string response = "";
   int num_matched = 0;
@@ -75,21 +74,20 @@ string Mastermind::check(string guess) const
   return response;
 }
 
-void Mastermind::play()
+void Mastermind::play() const
 {
   cout << "Computer: I have a 4 letter word in mind. Can you guess it?" << endl;
   const int namesSize = sizeof(names) / sizeof(names[0]);
   const int myRandom = rand() % namesSize;
-  cout << myRandom << endl;
-  picked = names[myRandom];
-  
+  const string picked = names[myRandom];
   string guess;
   int tries = 0;
+
   while (true)
   {
     tries++;
     guess = read_guess();
-    const string response = check(guess);
+    const string response = check(guess, picked);
     if (response == "****")
     {
       cout << "Computer: You got it! " << tries << " tries." << endl;
@@ -112,8 +110,6 @@ string Mastermind::read_guess() const
 int main()
 {
   srand(time(0));
-  
   Mastermind mastermind;
-
   mastermind.play();
 }
