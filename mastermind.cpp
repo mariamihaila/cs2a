@@ -57,14 +57,14 @@ string Mastermind::check(string guess, string picked) const
   {
     const char curr = picked[i];
     if (guess[i] == curr)
-      ++num_matched;
-    else
     {
-      for (int j = 0; j < guess.length(); ++j)
-      {
-	if (guess[j] == curr)
-	  ++num_found;
-      }
+      ++num_matched;
+      continue;
+    }
+    for (int j = 0; j < guess.length(); ++j)
+    {
+      if (guess[j] == curr)
+	++num_found;
     }
   }
   for (int i = 0; i < num_matched; ++i)
