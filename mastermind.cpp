@@ -12,8 +12,6 @@ public:
 private:
   string read_guess() const;
   string check(string guess) const;
-  int common_letters(string guess) const;
-  int matched_letters(string guess) const;
   
   static const string names[];
   string picked;
@@ -53,24 +51,28 @@ const string Mastermind::names[] =
 
 string Mastermind::check(string guess) const
 {
-  
-  return "";
-}
-
-int Mastermind::common_letters(string guess) const
-{
-  int num_common_letters = 0;
-  for (int i = 0; i < guess.length(); ++i)
+  string response = "";
+  int num_matched = 0;
+  int num_found = 0;
+  for (int i = 0; i < picked.length(); ++i)
   {
-    for (int j = 0; j < picked.length(); ++j)
+    const char curr = picked[i];
+    if (guess[i] == curr)
+      ++num_matched;
+    else
     {
-      if (j == i)
-	continue;
-      if (guess[i] == picked[j])
-	++num_common_letters;
+      for (int j = 0; j < guess.length(); ++j)
+      {
+	if (guess[j] == curr)
+	  ++num_found;
+      }
     }
   }
-  return num_common_letters;
+  for (int i = 0; i < num_matched; ++i)
+    response += "*";
+  for (int i = 0; i < num_found; ++i)
+    response += "-";
+  return response;
 }
 
 void Mastermind::play()
