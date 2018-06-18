@@ -7,13 +7,24 @@ class Mastermind
 {
 public:
   Mastermind() {}
-  void play() const;
+  void play();
   
 private:
-  string read_guess() const;
-  string check(string guess, string picked) const;
+  void read_guess();
+  void pick_name();
+  string check() const;
+  bool isValid(string name) const;
+  
+  string get_guess() const;
+  string get_picked() const;
+
+  bool set_guess(string a_gues);  
+  bool set_picked(string a_pick);
   
   static const string names[];
+  string guess;
+  string picked;
+  static const int WORD_LENGTH = 4;
 };
 
 const string Mastermind::names[] =
@@ -48,12 +59,51 @@ const string Mastermind::names[] =
     "WALT", "WILL", "WOLF"
   };
 
-string Mastermind::check(string guess, string picked) const
+string Mastermind::get_guess() const
+{
+  return guess;
+}
+
+string Mastermind::get_picked() const
+{
+  return picked;
+}
+
+bool Mastermind::set_guess(string a_guess)
+{
+  if (!isValid(a_guess))
+    return false;
+  guess = a_guess;
+  return true;
+}
+
+bool Mastermind::set_picked(string a_pick)
+{
+  if (!isValid(a_pick))
+    return false;
+  picked = a_pick;
+  return true;
+}
+
+void Mastermind::pick_name()
+{
+  const int namesSize = sizeof(names) / sizeof(names[0]);
+  const int myRandom = rand() % namesSize;
+  const string picked_name = names[myRandom];
+  set_picked(picked_name);
+}
+  
+bool Mastermind::isValid(string name) const
+{
+  return name.length() == WORD_LENGTH;
+}
+
+string Mastermind::check() const
 {
   string response = "";
   int num_matched = 0;
   int num_found = 0;
-  for (int i = 0; i < picked.length(); ++i)
+  for (int i = 0; i < WORD_LENGTH; ++i)
   {
     const char curr = picked[i];
     if (guess[i] == curr)
@@ -61,7 +111,7 @@ string Mastermind::check(string guess, string picked) const
       ++num_matched;
       continue;
     }
-    for (int j = 0; j < guess.length(); ++j)
+    for (int j = 0; j < WORD_LENGTH; ++j)
     {
       if (guess[j] == curr)
 	++num_found;
@@ -74,20 +124,16 @@ string Mastermind::check(string guess, string picked) const
   return response;
 }
 
-void Mastermind::play() const
+void Mastermind::play()
 {
-  cout << "Computer: I have a 4 letter word in mind. Can you guess it?" << endl;
-  const int namesSize = sizeof(names) / sizeof(names[0]);
-  const int myRandom = rand() % namesSize;
-  const string picked = names[myRandom];
-  string guess;
+  cout << "Computer: I have a 4 letter name in mind. Can you guess it?" << endl;
   int tries = 0;
 
   while (true)
   {
     tries++;
-    guess = read_guess();
-    const string response = check(guess, picked);
+    read_guess();
+    const string response = check();
     if (response == "****")
     {
       cout << "Computer: You got it! " << tries << " tries." << endl;
@@ -100,11 +146,16 @@ void Mastermind::play() const
   }
 }
 
-string Mastermind::read_guess() const
+void Mastermind::read_guess()
 {
-  string guess;
-  getline(cin, guess);
-  return guess;
+  string a_guess;
+  while (true)
+  {
+    getline(cin, a_guess);
+    if (set_guess(a_guess))
+      return;
+    cout << "Please enter a " << WORD_LENGTH << " letter name!" << endl;
+  }	
 }
 
 int main()
